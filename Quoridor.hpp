@@ -97,80 +97,80 @@ private:
         }
         return true;
     }
-    bool moveUp(int x, int y) {
+    bool _moveUp(int x, int y) {
         return  x + 1 <= 9 && partitions.count({{x + 1, y}, Right}) == 0;
     }
-    bool moveDown(int x, int y) {
+    bool _moveDown(int x, int y) {
         return x - 1 >= 1 && partitions.count({{x , y}, Right}) == 0;
     }
-    bool moveRight(int x, int y) {
+    bool _moveRight(int x, int y) {
         return y + 1 <= 9 && partitions.count({{x, y + 1}, Up}) == 0;
     }
-    bool moveLeft(int x, int y) {
+    bool _moveLeft(int x, int y) {
         return y - 1 >= 1 && partitions.count({{x, y}, Up}) == 0;
     }
-    bool moveUpLeft(int x, int y) {
+    bool _moveUpLeft(int x, int y) {
         bool can = false;
-        if (diff_x() == 1 && diff_y() == 0 && moveUp(x, y) && !moveUp(x + 1, y) && moveLeft(x + 1, y))// opponent higher
+        if (_diff_x() == 1 && _diff_y() == 0 && _moveUp(x, y) && !_moveUp(x + 1, y) && _moveLeft(x + 1, y))// opponent higher
             can = true;
-        if (diff_x() == 0 && diff_y() == -1 && moveLeft(x, y) && !moveLeft(x, y - 1) && moveUp(x, y - 1))
+        if (_diff_x() == 0 && _diff_y() == -1 && _moveLeft(x, y) && !_moveLeft(x, y - 1) && _moveUp(x, y - 1))
             can = true;
         return can;
     }
-    bool moveUpRight(int x, int y) {
+    bool _moveUpRight(int x, int y) {
         bool can = false;
-        if (diff_x() == 1 && diff_y() == 0 && moveUp(x, y) && !moveUp(x + 1, y) && moveRight(x + 1, y))// opponent higher
+        if (_diff_x() == 1 && _diff_y() == 0 && _moveUp(x, y) && !_moveUp(x + 1, y) && _moveRight(x + 1, y))// opponent higher
             can = true;
-        if (diff_x() == 0 && diff_y() == 1 && moveRight(x, y) && !moveRight(x, y + 1) && moveUp(x, y + 1))
+        if (_diff_x() == 0 && _diff_y() == 1 && _moveRight(x, y) && !_moveRight(x, y + 1) && _moveUp(x, y + 1))
             can = true;
         return can;
     }
-    bool moveDownRight(int x, int y) {
+    bool _moveDownRight(int x, int y) {
         bool can = false;
-        if (diff_x() == -1 && diff_y() == 0 && moveDown(x, y) && !moveDown(x - 1, y) && moveRight(x - 1, y))// opponent lower
+        if (_diff_x() == -1 && _diff_y() == 0 && _moveDown(x, y) && !_moveDown(x - 1, y) && _moveRight(x - 1, y))// opponent lower
             can = true;
-        if (diff_x() == 0 && diff_y() == 1 && moveRight(x, y) && !moveRight(x, y + 1) && moveDown(x, y + 1))
+        if (_diff_x() == 0 && _diff_y() == 1 && _moveRight(x, y) && !_moveRight(x, y + 1) && _moveDown(x, y + 1))
             can = true;
         return can;
     }
-    bool moveDownLeft(int x, int y) {
+    bool _moveDownLeft(int x, int y) {
         bool can = false;
-        if (diff_x() == -1 && diff_y() == 0 && moveDown(x, y) && !moveDown(x - 1, y) && moveLeft(x - 1, y))// opponent lower
+        if (_diff_x() == -1 && _diff_y() == 0 && _moveDown(x, y) && !_moveDown(x - 1, y) && _moveLeft(x - 1, y))// opponent lower
             can = true;
-        if (diff_x() == 0 && diff_y() == -1 && moveLeft(x, y) && !moveLeft(x, y - 1) && moveDown(x, y - 1))
+        if (_diff_x() == 0 && _diff_y() == -1 && _moveLeft(x, y) && !_moveLeft(x, y - 1) && _moveDown(x, y - 1))
             can = true;
         return can;
     }
-    int diff_x() {
-        return players[acting_player ^ 1].position.x - players[acting_player].position.x;
+    int _diff_x() {
+        return players[acting_player ^ unsigned(1)].position.x - players[acting_player].position.x;
     }
-    int diff_y() {
-        return players[acting_player ^ 1].position.y - players[acting_player].position.y;
+    int _diff_y() {
+        return players[acting_player ^ unsigned(1)].position.y - players[acting_player].position.y;
     }
-    bool check(int x, int y, int target, set<std::pair<int, int>> &used) {
+    bool _check_path(int x, int y, int target, set<std::pair<int, int>> &used) {
         if (x == target)
             return true;
         used.insert({x, y});
-        if (moveRight(x, y) && !used.count({x, y + 1}))
-            if (check(x, y + 1, target, used))
+        if (_moveRight(x, y) && !used.count({x, y + 1}))
+            if (_check_path(x, y + 1, target, used))
                 return true;
-        if (moveLeft(x, y) && !used.count({x, y - 1}))
-            if (check(x, y - 1, target, used))
+        if (_moveLeft(x, y) && !used.count({x, y - 1}))
+            if (_check_path(x, y - 1, target, used))
                 return true;
-        if (moveUp(x, y) && !used.count({x + 1, y}))
-            if (check(x + 1, y, target, used))
+        if (_moveUp(x, y) && !used.count({x + 1, y}))
+            if (_check_path(x + 1, y, target, used))
                 return true;
-        if (moveDown(x, y) && !used.count({x - 1, y}))
-            if (check(x - 1, y, target, used))
+        if (_moveDown(x, y) && !used.count({x - 1, y}))
+            if (_check_path(x - 1, y, target, used))
                 return true;
         return false;
     }
 
-    bool check_path() {
+    bool _check_path() {
         set <std::pair<int, int>> used;
-        bool res =  check(players[0].position.x, players[0].position.y, 9, used);
+        bool res =  _check_path(players[0].position.x, players[0].position.y, 9, used);
         used.clear();
-        return res && check(players[1].position.x, players[1].position.y, 1, used);
+        return res && _check_path(players[1].position.x, players[1].position.y, 1, used);
     }
 public:
     Quoridor() {
@@ -195,9 +195,9 @@ public:
         bool move_committed = false;
         int x = players[acting_player].position.x;
         int y = players[acting_player].position.y;
-        if (move.direction == Up &&  moveUp(x, y)) {
-            if (diff_y() == 0 && diff_x() == 1) {
-                if (moveUp(x + 1, y)) {
+        if (move.direction == Up &&  _moveUp(x, y)) {
+            if (_diff_y() == 0 && _diff_x() == 1) {
+                if (_moveUp(x + 1, y)) {
                     players[acting_player].position.x += 2;
                     move_committed = true;
                 }
@@ -207,9 +207,9 @@ public:
                 move_committed = true;
             }
         }
-        if (move.direction == Down && moveDown(x, y)) {
-            if (diff_y() == 0 && diff_x() == -1) {
-                if (moveUp(x - 1, y)) {
+        if (move.direction == Down && _moveDown(x, y)) {
+            if (_diff_y() == 0 && _diff_x() == -1) {
+                if (_moveUp(x - 1, y)) {
                     players[acting_player].position.x -= 2;
                     move_committed = true;
                 }
@@ -219,30 +219,30 @@ public:
                 move_committed = true;
             }
         }
-        if (move.direction == Right && moveRight(x, y)) {
+        if (move.direction == Right && _moveRight(x, y)) {
             players[acting_player].position.y++;
             move_committed = true;
         }
-        if (move.direction == Left && moveLeft(x, y)) {
+        if (move.direction == Left && _moveLeft(x, y)) {
             players[acting_player].position.y--;
             move_committed = true;
         }
-        if (move.direction == UpLeft && moveUpLeft(x, y)) {
+        if (move.direction == UpLeft && _moveUpLeft(x, y)) {
             players[acting_player].position.y--;
             players[acting_player].position.x++;
             move_committed = true;
         }
-        if (move.direction == UpRight && moveUpRight(x, y)) {
+        if (move.direction == UpRight && _moveUpRight(x, y)) {
             players[acting_player].position.y++;
             players[acting_player].position.x++;
             move_committed = true;
         }
-        if (move.direction == DownRight && moveDownRight(x, y)) {
+        if (move.direction == DownRight && _moveDownRight(x, y)) {
             players[acting_player].position.y++;
             players[acting_player].position.x--;
             move_committed = true;
         }
-        if (move.direction == DownLeft && moveDownLeft(x, y)) {
+        if (move.direction == DownLeft && _moveDownLeft(x, y)) {
             players[acting_player].position.y--;
             players[acting_player].position.x--;
             move_committed = true;
@@ -276,7 +276,7 @@ public:
         auto temp = partitions;
         partitions.insert({pars.first, partitions.size()});
         partitions.insert({pars.second, partitions.size() - 1});
-        if (!check_path()) {
+        if (!_check_path()) {
            partitions = temp;
            return false;
         }
