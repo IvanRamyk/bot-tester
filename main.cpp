@@ -1,7 +1,9 @@
 #include <iostream>
+#include <gtest/gtest.h>
 #include "Quoridor.hpp"
+
 int main() {
-    Quoridor game;
-    game.setPartition(Partition({1, 1}, Up));
+    testing::InitGoogleTest();
+    RUN_ALL_TESTS();
     return 0;
 }
