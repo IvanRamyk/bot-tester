@@ -147,6 +147,31 @@ private:
     int diff_y() {
         return players[acting_player ^ 1].position.y - players[acting_player].position.y;
     }
+    bool check(int x, int y, int target, set<std::pair<int, int>> &used) {
+        if (x == target)
+            return true;
+        used.insert({x, y});
+        if (moveRight(x, y) && !used.count({x, y + 1}))
+            if (check(x, y + 1, target, used))
+                return true;
+        if (moveLeft(x, y) && !used.count({x, y - 1}))
+            if (check(x, y - 1, target, used))
+                return true;
+        if (moveUp(x, y) && !used.count({x + 1, y}))
+            if (check(x + 1, y, target, used))
+                return true;
+        if (moveDown(x, y) && !used.count({x - 1, y}))
+            if (check(x - 1, y, target, used))
+                return true;
+        return false;
+    }
+
+    bool check_path() {
+        set <std::pair<int, int>> used;
+        bool res =  check(players[0].position.x, players[0].position.y, 9, used);
+        used.clear();
+        return res && check(players[1].position.x, players[1].position.y, 1, used);
+    }
 public:
     Quoridor() {
         players[0].position = {1, 5};
@@ -248,8 +273,13 @@ public:
             return false;
         if (partitions.count(pars.first) || partitions.count(pars.second))
             return false;
+        auto temp = partitions;
         partitions.insert({pars.first, partitions.size()});
         partitions.insert({pars.second, partitions.size() - 1});
+        if (!check_path()) {
+           partitions = temp;
+           return false;
+        }
         _passMove();
         return true;
     }

@@ -101,3 +101,15 @@ TEST(Quoridor, PartitionIntersection) {
     EXPECT_TRUE(game.setPartition({{4, 4}, Right}));
     EXPECT_FALSE(game.setPartition({{5, 5}, Down}));
 }
+
+TEST(Quoridor, Connection) {
+    Quoridor game;
+    EXPECT_TRUE(game.setPartition({{2,1}, Right}));
+    EXPECT_TRUE(game.setPartition({{2,3}, Right}));
+    EXPECT_TRUE(game.setPartition({{2,5}, Right}));
+    EXPECT_TRUE(game.setPartition({{2,7}, Right}));
+    EXPECT_TRUE(game.setPartition({{2,9}, Up}));
+    EXPECT_FALSE(game.setPartition({{4,8}, Right}));
+    EXPECT_TRUE(game.setPartition({{4,7}, Right}));
+
+}
