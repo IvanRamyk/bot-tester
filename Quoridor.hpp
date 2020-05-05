@@ -50,8 +50,10 @@ struct Move {
 
 class Quoridor {
 private:
-    Player players[2]{};
-    unsigned  int acting_player;
+    Player players[4]{};
+    unsigned int acting_player;
+    int player_number;
+    int cnt_moves;
     map<Partition, int> partitions;// with length 1, direction only Right or Up (for more strict definition)
     static Partition _downToUp(Partition p) {
         int x = p.start_point.x - 2;
@@ -77,9 +79,11 @@ private:
         return {Partition({x1, y1}, partition.direction),
                 Partition({(x1 + x2) / 2, (y1 + y2) / 2}, partition.direction)};
     }
+
     void _passMove() {
-        acting_player ^= unsigned (1);
+        acting_player = (acting_player + unsigned (1)) % player_number;
     }
+
     static bool _onField(Partition partition) {
         int x = partition.start_point.x;
         int y = partition.start_point.y;
@@ -173,10 +177,23 @@ private:
         return res && _checkPath(players[1].position.x, players[1].position.y, 1, used);
     }
 public:
-    Quoridor() {
+    Quoridor(int cnt_players = 2) {
+        cnt_moves = 0;
+        if (cnt_players != 2 && cnt_players != 4)
+            throw std::invalid_argument("Only games with 2 or 4 players are possible to create");
+
+        player_number = cnt_players;
         players[0].position = {1, 5};
         players[1].position = {9, 5};
+        if (cnt_players == 4) {
+            players[2].position = {5, 1};
+            players[3].position = {5, 9};
+        }
         acting_player = 0;
+    }
+
+    bool draw() {
+        return cnt_moves >= 50;
     }
 
     bool firstPlayerVictory() {
@@ -188,8 +205,10 @@ public:
     }
 
     bool move(Move move) {
-        if (firstPlayerVictory() || secondPlayerVictory())
+        if (firstPlayerVictory() || secondPlayerVictory() || draw()) {
+            std::cout << firstPlayerVictory()  <<"  " <<secondPlayerVictory()  << " " << draw() << "\n";
             return false;
+        }
         if (move.player_number != acting_player)
             return false;
         bool move_committed = false;
@@ -250,11 +269,12 @@ public:
         if (!move_committed)
             return false;
         _passMove();
+        ++cnt_moves;
         return true;
     }
 
     bool setPartition(Partition partition) {
-        if (firstPlayerVictory() || secondPlayerVictory())
+        if (firstPlayerVictory() || secondPlayerVictory() || draw())
             return false;
         std::pair<Partition, Partition> pars = _splitPartition(partition);
         if (!_onField(pars.first) || !_onField(pars.second))
@@ -280,6 +300,7 @@ public:
            partitions = temp;
            return false;
         }
+        cnt_moves = 0;
         _passMove();
         return true;
     }

@@ -111,5 +111,58 @@ TEST(Quoridor, Connection) {
     EXPECT_TRUE(game.setPartition({{2,9}, Up}));
     EXPECT_FALSE(game.setPartition({{4,8}, Right}));
     EXPECT_TRUE(game.setPartition({{4,7}, Right}));
+}
 
+TEST(Quoridor, Draw) {
+    Quoridor game;
+    for (int i = 0; i < 50; ++i) {
+        if (i % 4 == 0) {
+            EXPECT_TRUE(game.move({0, Up}));
+        }
+        if (i % 4 == 1) {
+            EXPECT_TRUE(game.move({1, Down}));
+        }
+        if (i % 4 == 2) {
+            EXPECT_TRUE(game.move({0, Down}));
+        }
+        if (i % 4 == 3) {
+            EXPECT_TRUE(game.move({1, Up}));
+        }
+    }
+    EXPECT_TRUE(game.draw());
+
+}
+
+TEST(Quoridor, Draw2) {
+    Quoridor game;
+    for (int i = 0; i < 50; ++i) {
+        if (i == 25) {
+            EXPECT_TRUE(game.setPartition({{2,2}, Right}));
+        }
+        if (i % 4 == 0) {
+            EXPECT_TRUE(game.move({0, Up}));
+        }
+        if (i % 4 == 1) {
+            EXPECT_TRUE(game.move({1, Down}));
+        }
+        if (i % 4 == 2) {
+            EXPECT_TRUE(game.move({0, Down}));
+        }
+        if (i % 4 == 3) {
+            EXPECT_TRUE(game.move({1, Up}));
+        }
+    }
+    EXPECT_FALSE(game.draw());
+
+}
+
+
+
+TEST(Quoridor, Exeption) {
+    try {
+        Quoridor game(3);
+    }
+    catch (std::invalid_argument& e) {
+        std::cout << e.what() << "\n";
+    }
 }
