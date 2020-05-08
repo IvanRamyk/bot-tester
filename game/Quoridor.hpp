@@ -206,7 +206,6 @@ public:
 
     bool move(Move move) {
         if (firstPlayerVictory() || secondPlayerVictory() || draw()) {
-            std::cout << firstPlayerVictory()  <<"  " <<secondPlayerVictory()  << " " << draw() << "\n";
             return false;
         }
         if (move.player_number != acting_player)
@@ -228,7 +227,7 @@ public:
         }
         if (move.direction == Down && _moveDown(x, y)) {
             if (_diffY() == 0 && _diffX() == -1) {
-                if (_moveUp(x - 1, y)) {
+                if (_moveDown(x - 1, y)) {
                     players[acting_player].position.x -= 2;
                     move_committed = true;
                 }

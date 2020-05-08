@@ -138,6 +138,9 @@ TEST(Quoridor, Draw2) {
     for (int i = 0; i < 50; ++i) {
         if (i == 25) {
             EXPECT_TRUE(game.setPartition({{2,2}, Right}));
+            EXPECT_TRUE(game.setPartition({{7,2}, Right}));
+            EXPECT_TRUE(game.move({1, Down}));
+            continue;
         }
         if (i % 4 == 0) {
             EXPECT_TRUE(game.move({0, Up}));
