@@ -200,12 +200,28 @@ bool Quoridor::move(Move move) {
         }
     }
     if (move.direction == Right && _moveRight(x, y)) {
-        players[acting_player].position.y++;
-        move_committed = true;
+        if (_diffY() == 1 && _diffX() == 0) {
+            if (_moveDown(x, y + 1)) {
+                players[acting_player].position.y += 2;
+                move_committed = true;
+            }
+        }
+        else {
+            players[acting_player].position.y++;
+            move_committed = true;
+        }
     }
     if (move.direction == Left && _moveLeft(x, y)) {
-        players[acting_player].position.y--;
-        move_committed = true;
+        if (_diffY() == -1 && _diffX() == 0) {
+            if (_moveDown(x, y - 1)) {
+                players[acting_player].position.y -= 2;
+                move_committed = true;
+            }
+        }
+        else {
+            players[acting_player].position.y++;
+            move_committed = true;
+        }
     }
     if (move.direction == UpLeft && _moveUpLeft(x, y)) {
         players[acting_player].position.y--;
