@@ -1,4 +1,4 @@
-#include "../Quoridor.hpp"
+#include "../game/Quoridor.hpp"
 #include <gtest/gtest.h>
 //
 // Created by ivan on 02.05.20.
