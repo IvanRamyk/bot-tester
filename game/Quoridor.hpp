@@ -163,6 +163,33 @@ public:
             }
             return {true, log};
         }
+        else  {
+            int x1, y1, x2, y2;
+            stream >> x1 >> y1 >> x2 >> y2;
+            if (x1 > x2) {
+                std::swap(x1, x2);
+                std::swap(y1, y2);
+            }
+            if (y1 > y2) {
+                std::swap(x1, x2);
+                std::swap(y1, y2);
+            }
+            int dx = x2 - x1;
+            int dy = y2 - y1;
+            Partition partition;
+            partition.start_point = {x1, x2};
+            if (dy == 0 && dx == 2)
+                partition.direction = Up;
+            else if (dy == 2 && dx == 0)
+                partition.direction = Right;
+            else
+                return {false, log + "\nplayer " + std::to_string(acting_player + 1) + " made an impossible move."};
+            bool res = setPartition(partition);
+            if (!res) {
+                return {false, log + "\nplayer " + std::to_string(acting_player + 1) + " made an impossible move."};
+            }
+            return {true, log};
+        }
     }
 };
 

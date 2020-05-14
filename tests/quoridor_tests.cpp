@@ -176,5 +176,8 @@ TEST(Quoridor, logs) {
     EXPECT_TRUE(res.first &&  res.second == "move 2 5");
     res = game.makeMove("move 2 4");
     EXPECT_TRUE(!res.first);
-    std::cout << res.second << "\n";
+    //std::cout << res.second << "\n";
+    res = game.makeMove("partition 2 2 2 4");
+    //std::cout << res.second << "\n";
+    EXPECT_TRUE(res.first && res.second == "partition 2 2 2 4");
 }
