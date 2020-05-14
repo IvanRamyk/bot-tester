@@ -147,9 +147,13 @@ Quoridor::Quoridor(int cnt_players) {
     player_number = cnt_players;
     players[0].position = {1, 5};
     players[1].position = {9, 5};
+    used_partitions[0] = 0;
+    used_partitions[1] = 0;
     if (cnt_players == 4) {
         players[2].position = {5, 1};
         players[3].position = {5, 9};
+        used_partitions[2] = 0;
+        used_partitions[3] = 0;
     }
     acting_player = 0;
 }
@@ -253,6 +257,8 @@ bool Quoridor::move(Move move) {
 bool Quoridor::setPartition(Partition partition) {
     if (firstPlayerVictory() || secondPlayerVictory() || draw())
         return false;
+    if (used_partitions[acting_player] == 10)
+        return false;
     std::pair<Partition, Partition> pars = _splitPartition(partition);
     if (!_onField(pars.first) || !_onField(pars.second))
         return false;
@@ -278,6 +284,7 @@ bool Quoridor::setPartition(Partition partition) {
         return false;
     }
     cnt_moves = 0;
+    used_partitions[acting_player]++;
     _passMove();
     return true;
 }

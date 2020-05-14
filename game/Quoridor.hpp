@@ -54,6 +54,7 @@ class Quoridor {
 private:
     Player players[4]{};
     unsigned int acting_player;
+    int used_partitions[4];
     int player_number;
     int cnt_moves;
     map<Partition, int> partitions;// with length 1, direction only Right or Up (for more strict definition)
@@ -91,7 +92,7 @@ private:
 
     bool _checkPath();
 
-    Direction _diffToDirection(int dx, int dy) {
+    static Direction _diffToDirection(int dx, int dy) {
         Direction direction;
         if (dx == 1 && dy == 0)
             direction = Up;
@@ -122,7 +123,7 @@ private:
         return direction;
     }
 
-    bool _checkFormat(std::string command) {
+    static bool _checkFormat(const std::string& command) {
         std::string buffer, type;
         int cnt_params = 0;
         std::stringstream stream(command);
@@ -134,8 +135,8 @@ private:
                 cnt_params = 1;
             }
             else if (cnt_params == 1 || cnt_params == 2 || cnt_params == 3 || cnt_params == 4) {
-                for (int i = 0; i < buffer.size(); ++i)
-                    if (!std::isdigit(buffer[i]))
+                for (char i : buffer)
+                    if (!std::isdigit(i))
                         return false;
                 cnt_params++;
             }
@@ -166,7 +167,7 @@ public:
         return -1;
     }
 
-    std::pair<bool, std::string> makeMove(std::string _move) {
+    std::pair<bool, std::string> makeMove(const std::string& _move) {
         std::string log = _move;
         if (!_checkFormat(_move)) {
             return  {false, "incorrect format of move"};
@@ -211,7 +212,7 @@ public:
             }
             int dx = x2 - x1;
             int dy = y2 - y1;
-            Partition partition;
+            Partition partition{};
             partition.start_point = {x1, x2};
             if (dy == 0 && dx == 2)
                 partition.direction = Up;
