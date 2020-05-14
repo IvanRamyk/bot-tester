@@ -161,10 +161,10 @@ public:
 
     int winner() {
         if (firstPlayerVictory())
-            return 0;
-        if (secondPlayerVictory())
             return 1;
-        return -1;
+        if (secondPlayerVictory())
+            return 2;
+        return 0;
     }
 
     std::pair<bool, std::string> makeMove(const std::string& _move) {
