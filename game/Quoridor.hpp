@@ -8,11 +8,13 @@
 #include <set>
 #include <map>
 #include <iostream>
+#include <sstream>
+#include <cctype>
 using std::set;
 using std::map;
 
 enum Direction {
-    Left, Right, Up, Down, UpLeft, UpRight, DownLeft, DownRight
+    Left, Right, Up, Down, UpLeft, UpRight, DownLeft, DownRight, DownDown, UpUp, LeftLeft, RightRight, None
 };
 
 struct Position {
@@ -32,14 +34,7 @@ struct Partition {
     Partition()= default;
 };
 
-inline bool operator < (Partition a, Partition b) {
-    if (a.direction != b.direction)
-        return a.direction < b.direction;
-    if (a.start_point.x != b.start_point.x)
-        return a.start_point.x < b.start_point.x;
-    return a.start_point.y < b.start_point.y;
-
-}
+inline bool operator < (Partition a, Partition b);
 
 
 
@@ -52,6 +47,7 @@ class Quoridor {
 private:
     Player players[4]{};
     unsigned int acting_player;
+    int used_partitions[4];
     int player_number;
     int cnt_moves;
     map<Partition, int> partitions;// with length 1, direction only Right or Up (for more strict definition)
@@ -89,6 +85,10 @@ private:
 
     bool _checkPath();
 
+    static Direction _diffToDirection(int dx, int dy);
+
+    static bool _checkFormat(const std::string& command);
+
 public:
     explicit Quoridor(int cnt_players = 2);
 
@@ -101,6 +101,10 @@ public:
     bool move(Move move);
 
     bool setPartition(Partition partition);
+
+    int winner();
+
+    std::pair<bool, std::string> makeMove(const std::string& _move);
 };
 
 

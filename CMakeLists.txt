@@ -7,7 +7,8 @@ add_subdirectory(lib/googletest-master)
 include_directories(lib/googletest-master/googletest/include)
 include_directories(lib/googletest-master/googlemock/include)
 
-add_executable(tester main.cpp game/Quoridor.cpp game/Quoridor.hpp tests/quoridor_tests.cpp server/Server.cpp server/Server.hpp)
+add_executable(tester main.cpp game/Quoridor.cpp game/Quoridor.hpp tests/quoridor_tests.cpp server/Server.cpp
+        server/Server.hpp)
 
 add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
 
