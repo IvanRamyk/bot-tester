@@ -166,6 +166,31 @@ TEST(Quoridor, Exeption) {
         Quoridor game(3);
     }
     catch (std::invalid_argument& e) {
-        std::cout << e.what() << "\n";
+        //std::cout << e.what() << "\n";
     }
+}
+
+TEST(Quoridor, logs) {
+    Quoridor game;
+    auto res = game.makeMove("move 2 5");
+    EXPECT_TRUE(res.first &&  res.second == "move 2 5");
+    res = game.makeMove("move 2 4");
+    EXPECT_TRUE(!res.first);
+    //std::cout << res.second << "\n";
+    res = game.makeMove("partition 2 2 2 4");
+    //std::cout << res.second << "\n";
+    EXPECT_TRUE(res.first && res.second == "partition 2 2 2 4");
+}
+
+TEST(Quoridor, IncorrectFormat) {
+    Quoridor game;
+    EXPECT_TRUE(!game.makeMove("move m 2").first);
+    EXPECT_TRUE(!game.makeMove("move 2 2 2").first);
+    EXPECT_TRUE(!game.makeMove("mov 2 2").first);
+    EXPECT_TRUE(!game.makeMove("partition").first);
+    EXPECT_TRUE(!game.makeMove("partition 1").first);
+    EXPECT_TRUE(!game.makeMove("partition 1 1").first);
+    EXPECT_TRUE(!game.makeMove("partition 1 1 3").first);
+    EXPECT_TRUE(!game.makeMove("partition 1 1 3 1 1").first);
+    EXPECT_TRUE(game.makeMove("partition 1 1 3 1     ").first);
 }
