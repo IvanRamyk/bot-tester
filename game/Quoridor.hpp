@@ -8,11 +8,12 @@
 #include <set>
 #include <map>
 #include <iostream>
+#include <sstream>
 using std::set;
 using std::map;
 
 enum Direction {
-    Left, Right, Up, Down, UpLeft, UpRight, DownLeft, DownRight
+    Left, Right, Up, Down, UpLeft, UpRight, DownLeft, DownRight, DownDown, UpUp, LeftLeft, RightRight, None
 };
 
 struct Position {
@@ -89,6 +90,37 @@ private:
 
     bool _checkPath();
 
+    Direction _diffToDirection(int dx, int dy) {
+        Direction direction;
+        if (dx == 1 && dy == 0)
+            direction = Up;
+        else if (dx == -1 && dy == 0)
+            direction = Down;
+        else if (dx == 0 && dy == 1)
+            direction = Right;
+        else if (dx == 0 && dy == -1)
+            direction = Left;
+        else if (dx == -1 && dy == -1)
+            direction = DownLeft;
+        else if (dx == 1 && dy == -1)
+            direction = UpLeft;
+        else if (dx == 1 && dy == 1)
+            direction = UpRight;
+        else if (dx == -1 && dy == 1)
+            direction = DownRight;
+        else if (dx == 2 && dy == 0)
+            direction = UpUp;
+        else if (dx == -2 && dy == 0)
+            direction = DownDown;
+        else if (dx == 0 && dy == 2)
+            direction = RightRight;
+        else if (dx == 0 && dy == -2)
+            direction = LeftLeft;
+        else
+            direction = None;
+        return direction;
+    }
+
 public:
     explicit Quoridor(int cnt_players = 2);
 
@@ -101,6 +133,37 @@ public:
     bool move(Move move);
 
     bool setPartition(Partition partition);
+
+    std::pair<bool, std::string> makeMove(std::string _move) {
+        std::string log = _move;
+        std::stringstream stream(_move);
+        std::string type;
+        stream >> type;
+        if (type == "move") {
+            int x, y;
+            stream >> x >> y;
+            int cur_x = players[acting_player].position.x;
+            int cur_y = players[acting_player].position.y;
+            int player = acting_player;
+            Direction direction = _diffToDirection(x - cur_x, y - cur_y);
+            if (direction == None)
+                return {false, log + "\nplayer " + std::to_string(acting_player + 1) + " made an impossible move."};
+            bool result =  move({player, direction});
+            if (!result) {
+                return {false, log + "\nplayer " + std::to_string(acting_player + 1) + " made an impossible move."};
+            }
+            if (firstPlayerVictory()) {
+                return {false, log + "\nplayer " + std::to_string(1) + " won."};
+            }
+            if (secondPlayerVictory()) {
+                return {false, log + "\nplayer " + std::to_string(2) + " won."};
+            }
+            if (draw()) {
+                return {false, log + "\nDraw."};
+            }
+            return {true, log};
+        }
+    }
 };
 
 

@@ -166,6 +166,15 @@ TEST(Quoridor, Exeption) {
         Quoridor game(3);
     }
     catch (std::invalid_argument& e) {
-        std::cout << e.what() << "\n";
+        //std::cout << e.what() << "\n";
     }
+}
+
+TEST(Quoridor, logs) {
+    Quoridor game;
+    auto res = game.makeMove("move 2 5");
+    EXPECT_TRUE(res.first &&  res.second == "move 2 5");
+    res = game.makeMove("move 2 4");
+    EXPECT_TRUE(!res.first);
+    std::cout << res.second << "\n";
 }
