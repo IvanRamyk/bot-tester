@@ -288,3 +288,135 @@ bool Quoridor::setPartition(Partition partition) {
     _passMove();
     return true;
 }
+
+Direction Quoridor::_diffToDirection(int dx, int dy) {
+    Direction direction;
+    if (dx == 1 && dy == 0)
+        direction = Up;
+    else if (dx == -1 && dy == 0)
+        direction = Down;
+    else if (dx == 0 && dy == 1)
+        direction = Right;
+    else if (dx == 0 && dy == -1)
+        direction = Left;
+    else if (dx == -1 && dy == -1)
+        direction = DownLeft;
+    else if (dx == 1 && dy == -1)
+        direction = UpLeft;
+    else if (dx == 1 && dy == 1)
+        direction = UpRight;
+    else if (dx == -1 && dy == 1)
+        direction = DownRight;
+    else if (dx == 2 && dy == 0)
+        direction = UpUp;
+    else if (dx == -2 && dy == 0)
+        direction = DownDown;
+    else if (dx == 0 && dy == 2)
+        direction = RightRight;
+    else if (dx == 0 && dy == -2)
+        direction = LeftLeft;
+    else
+        direction = None;
+    return direction;
+}
+
+bool Quoridor::_checkFormat(const std::string &command) {
+    std::string buffer, type;
+    int cnt_params = 0;
+    std::stringstream stream(command);
+    while (stream >> buffer) {
+        if (cnt_params == 0) {
+            type = buffer;
+            if (buffer != "move" && buffer != "partition")
+                return false;
+            cnt_params = 1;
+        }
+        else if (cnt_params == 1 || cnt_params == 2 || cnt_params == 3 || cnt_params == 4) {
+            for (char i : buffer)
+                if (!std::isdigit(i))
+                    return false;
+            cnt_params++;
+        }
+        else
+            return false;
+    }
+    return ((type == "move" && cnt_params == 3) || (type == "partition" && cnt_params == 5));
+}
+
+int Quoridor::winner() {
+    if (firstPlayerVictory())
+        return 1;
+    if (secondPlayerVictory())
+        return 2;
+    return 0;
+}
+
+std::pair<bool, std::string> Quoridor::makeMove(const std::string &_move) {
+    std::string log = _move;
+    if (!_checkFormat(_move)) {
+        return  {false, "incorrect format of move"};
+    }
+    std::stringstream stream(_move);
+    std::string type;
+    stream >> type;
+    if (type == "move") {
+        int x, y;
+        stream >> x >> y;
+        int cur_x = players[acting_player].position.x;
+        int cur_y = players[acting_player].position.y;
+        int player = acting_player;
+        Direction direction = _diffToDirection(x - cur_x, y - cur_y);
+        if (direction == None)
+            return {false, log + "\nplayer " + std::to_string(acting_player + 1) + " made an impossible move."};
+        bool result =  move({player, direction});
+        if (!result) {
+            return {false, log + "\nplayer " + std::to_string(acting_player + 1) + " made an impossible move."};
+        }
+        if (firstPlayerVictory()) {
+            return {false, log + "\nplayer " + std::to_string(1) + " won."};
+        }
+        if (secondPlayerVictory()) {
+            return {false, log + "\nplayer " + std::to_string(2) + " won."};
+        }
+        if (draw()) {
+            return {false, log + "\nDraw."};
+        }
+        return {true, log};
+    }
+    else  {
+        int x1, y1, x2, y2;
+        stream >> x1 >> y1 >> x2 >> y2;
+        if (x1 > x2) {
+            std::swap(x1, x2);
+            std::swap(y1, y2);
+        }
+        if (y1 > y2) {
+            std::swap(x1, x2);
+            std::swap(y1, y2);
+        }
+        int dx = x2 - x1;
+        int dy = y2 - y1;
+        Partition partition{};
+        partition.start_point = {x1, x2};
+        if (dy == 0 && dx == 2)
+            partition.direction = Up;
+        else if (dy == 2 && dx == 0)
+            partition.direction = Right;
+        else
+            return {false, log + "\nplayer " + std::to_string(acting_player + 1) + " made an impossible move."};
+        bool res = setPartition(partition);
+        if (!res) {
+            return {false, log + "\nplayer " + std::to_string(acting_player + 1) + " made an impossible move."};
+        }
+        return {true, log};
+    }
+}
+
+bool operator<(Partition a, Partition b) {
+    if (a.direction != b.direction)
+        return a.direction < b.direction;
+    if (a.start_point.x != b.start_point.x)
+        return a.start_point.x < b.start_point.x;
+    return a.start_point.y < b.start_point.y;
+
+}
