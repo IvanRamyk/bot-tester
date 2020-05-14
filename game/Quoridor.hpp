@@ -9,6 +9,7 @@
 #include <map>
 #include <iostream>
 #include <sstream>
+#include <cctype>
 using std::set;
 using std::map;
 
@@ -121,6 +122,29 @@ private:
         return direction;
     }
 
+    bool _checkFormat(std::string command) {
+        std::string buffer, type;
+        int cnt_params = 0;
+        std::stringstream stream(command);
+        while (stream >> buffer) {
+            if (cnt_params == 0) {
+                type = buffer;
+                if (buffer != "move" && buffer != "partition")
+                    return false;
+                cnt_params = 1;
+            }
+            else if (cnt_params == 1 || cnt_params == 2 || cnt_params == 3 || cnt_params == 4) {
+                for (int i = 0; i < buffer.size(); ++i)
+                    if (!std::isdigit(buffer[i]))
+                        return false;
+                cnt_params++;
+            }
+            else
+                return false;
+        }
+        return ((type == "move" && cnt_params == 3) || (type == "partition" && cnt_params == 5));
+    }
+
 public:
     explicit Quoridor(int cnt_players = 2);
 
@@ -134,8 +158,19 @@ public:
 
     bool setPartition(Partition partition);
 
+    int winner() {
+        if (firstPlayerVictory())
+            return 0;
+        if (secondPlayerVictory())
+            return 1;
+        return -1;
+    }
+
     std::pair<bool, std::string> makeMove(std::string _move) {
         std::string log = _move;
+        if (!_checkFormat(_move)) {
+            return  {false, "incorrect format of move"};
+        }
         std::stringstream stream(_move);
         std::string type;
         stream >> type;

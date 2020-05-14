@@ -181,3 +181,16 @@ TEST(Quoridor, logs) {
     //std::cout << res.second << "\n";
     EXPECT_TRUE(res.first && res.second == "partition 2 2 2 4");
 }
+
+TEST(Quoridor, IncorrectFormat) {
+    Quoridor game;
+    EXPECT_TRUE(!game.makeMove("move m 2").first);
+    EXPECT_TRUE(!game.makeMove("move 2 2 2").first);
+    EXPECT_TRUE(!game.makeMove("mov 2 2").first);
+    EXPECT_TRUE(!game.makeMove("partition").first);
+    EXPECT_TRUE(!game.makeMove("partition 1").first);
+    EXPECT_TRUE(!game.makeMove("partition 1 1").first);
+    EXPECT_TRUE(!game.makeMove("partition 1 1 3").first);
+    EXPECT_TRUE(!game.makeMove("partition 1 1 3 1 1").first);
+    EXPECT_TRUE(game.makeMove("partition 1 1 3 1     ").first);
+}
