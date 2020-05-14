@@ -1,7 +1,6 @@
 #include <iostream>
 #include "game/Quoridor.hpp"
 #include "Interactor/Interactor.h"
-#include "client/Client.h"
 
 int main() {
     auto* game = new Quoridor();

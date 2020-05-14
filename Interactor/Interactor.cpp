@@ -29,14 +29,3 @@ Move getMove(const std::string& move){
 }
 
 template<>
-GameStatus* Interactor<Quoridor>::nextMove(const std::string &prevMove) {
-    if(isMove(prevMove)){
-        Move playerMove = getMove(prevMove);
-        bool result = Game->move(playerMove);
-        if(result){
-           return new GameStatus(0,"");
-        }
-    }else if(isPartition(prevMove)){
-
-    }
-}
