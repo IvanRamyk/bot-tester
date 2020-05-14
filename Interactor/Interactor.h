@@ -58,7 +58,7 @@ int Interactor<Game>::playGame(const std::string& gameName) {
     while(true) {
         std::string playerMove = server.receive(serverPort);
         auto result = Game->makeMove();
-        sleep(0.1);
+        usleep(100);
         if(recordLog)
             ofs << result.second << std::endl;
         else if(writeLog)
