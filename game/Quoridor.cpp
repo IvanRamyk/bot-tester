@@ -180,51 +180,51 @@ bool Quoridor::move(Move move) {
     int x = players[acting_player].position.x;
     int y = players[acting_player].position.y;
     if (move.direction == Up &&  _moveUp(x, y)) {
+        players[acting_player].position.x++;
+        move_committed = true;
+    }
+    if (move.direction == UpUp && _moveUp(x, y)) {
         if (_diffY() == 0 && _diffX() == 1) {
             if (_moveUp(x + 1, y)) {
                 players[acting_player].position.x += 2;
                 move_committed = true;
             }
         }
-        else {
-            players[acting_player].position.x++;
-            move_committed = true;
-        }
     }
     if (move.direction == Down && _moveDown(x, y)) {
+        players[acting_player].position.x--;
+        move_committed = true;
+    }
+    if (move.direction == DownDown && _moveDown(x, y)) {
         if (_diffY() == 0 && _diffX() == -1) {
             if (_moveDown(x - 1, y)) {
                 players[acting_player].position.x -= 2;
                 move_committed = true;
             }
         }
-        else {
-            players[acting_player].position.x--;
-            move_committed = true;
-        }
     }
     if (move.direction == Right && _moveRight(x, y)) {
+        players[acting_player].position.y++;
+        move_committed = true;
+    }
+    if (move.direction == RightRight && _moveRight(x, y)) {
         if (_diffY() == 1 && _diffX() == 0) {
             if (_moveDown(x, y + 1)) {
                 players[acting_player].position.y += 2;
                 move_committed = true;
             }
         }
-        else {
-            players[acting_player].position.y++;
-            move_committed = true;
-        }
     }
     if (move.direction == Left && _moveLeft(x, y)) {
+        players[acting_player].position.y++;
+        move_committed = true;
+    }
+    if (move.direction == LeftLeft && _moveLeft(x, y)) {
         if (_diffY() == -1 && _diffX() == 0) {
             if (_moveDown(x, y - 1)) {
                 players[acting_player].position.y -= 2;
                 move_committed = true;
             }
-        }
-        else {
-            players[acting_player].position.y++;
-            move_committed = true;
         }
     }
     if (move.direction == UpLeft && _moveUpLeft(x, y)) {

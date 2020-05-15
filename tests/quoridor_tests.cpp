@@ -31,7 +31,7 @@ TEST(Quoridor, JumpDown){
     EXPECT_TRUE(game.move({1, Down}));
     EXPECT_TRUE(game.move({0, Up}));
     EXPECT_TRUE(game.move({1, Down}));
-    EXPECT_TRUE(!game.move({0, Up}));
+    EXPECT_TRUE(!game.move({0, UpUp}));
 }
 
 TEST(Quoridor, JumpUp){
@@ -51,7 +51,7 @@ TEST(Quoridor, JumpUp){
     EXPECT_TRUE(game.move({0, Up}));
     EXPECT_TRUE(game.move({1, Down}));
     EXPECT_TRUE(game.move({0, Up}));
-    EXPECT_TRUE(!game.move({1, Down}));
+    EXPECT_TRUE(!game.move({1, DownDown}));
 }
 
 TEST(Quoridor, PartitionCollisionRight) {
