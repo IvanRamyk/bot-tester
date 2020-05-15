@@ -19,6 +19,7 @@ bool get_opponent_move() {
         int x1, y1, x2, y2;
         cin >> x1 >> y1 >> x2 >> y2;
     }
+    return true;
 }
 
 int main() {
@@ -34,8 +35,6 @@ int main() {
         y = 5;
     }
     while (true) {
-        if (!get_opponent_move())
-            break;
         if (number == 1) {
             x++;
             cout << "move " << x << " " << y << "\n";
@@ -44,6 +43,8 @@ int main() {
             x--;
             cout << "move " << x << " "  << y << "\n";
         }
+        if (!get_opponent_move())
+            break;
     }
     return 0;
 }

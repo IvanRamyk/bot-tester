@@ -43,7 +43,7 @@ bool isDraw(const std::string& result){
         return false;
     std::string word = "";
     for(int i = 0; i < 4; i++){
-        word = result[result.length
+        word = result[result.length()];
     }
 }
 
