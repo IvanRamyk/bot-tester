@@ -65,6 +65,21 @@ pair <int, int> bfs() {
     return dist[{x, y}];
 }
 
+void add_partition(int x1, int y1,int x2, int y2) {
+    if (x1 > x2)
+        swap(x1, x2);
+    if (y1 > y2)
+        swap(y1, y2);
+    if (y1 == y2) {
+        s.insert({x1, y1, 1});
+        s.insert({x1 + 1, y1, 1});
+    }
+    else {
+        s.insert({x1, y1, 0});
+        s.insert({x1, y1 + 1, 0});
+    }
+}
+
 bool get_opponent_move() {
     string type;
     cin >> type;
@@ -77,20 +92,17 @@ bool get_opponent_move() {
     else  {
         int x1, y1, x2, y2;
         cin >> x1 >> y1 >> x2 >> y2;
-        if (x1 > x2)
-            swap(x1, x2);
-        if (y1 > y2)
-            swap(y1, y2);
-        if (y1 == y2) {
-            s.insert({x1, y1, 1});
-            s.insert({x1 + 1, y1, 1});
-        }
-        else {
-            s.insert({x1, y1, 0});
-            s.insert({x1, y1 + 1, 0});
-        }
+        add_partition(x1,y1,x2,y2);
     }
     return true;
+}
+
+std::string set_partition()  {
+    if (number == 1) {
+        add_partition(8,5,8,7);
+        return "partition 8 5 8 7";
+    }
+    return "";
 }
 
 int main() {
@@ -98,14 +110,20 @@ int main() {
     if (number == 1) {
         x = 1;
         y = 5;
+        cout << set_partition() << "\n";
+        get_opponent_move();
     }
     else  {
-        get_opponent_move();
         x = 9;
         y = 5;
+        get_opponent_move();
     }
     while (true) {
         auto move = bfs();
+        if (move.first == x_ && move.second == y_)  {
+            move.first = x + (move.first - x) * 2;
+            move.second = y + (move.second - y) * 2;
+        }
         x = move.first;
         y = move.second;
         cout << "move " << move.first << " " << move.second << "\n";
