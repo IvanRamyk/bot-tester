@@ -1,7 +1,11 @@
-#include <gtest/gtest.h>
+#include <iostream>
+#include "game/Quoridor.hpp"
+#include "Interactor/Interactor.h"
 
 int main() {
-    testing::InitGoogleTest();
-    RUN_ALL_TESTS();
+    auto* game = new Quoridor();
+    auto* interactor = new Interactor<Quoridor>(game);
+
+    std::cout << "I've done my branch!\n";
     return 0;
 }
