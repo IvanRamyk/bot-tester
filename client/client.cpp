@@ -40,11 +40,18 @@ int main(int argc, char** argv) {
     std::cout << "Bot listening on: " << myPortName << std::endl;
     // std::ofstream ofs("log.txt");
     std::string message;
-    while(message != "-1") {
+    message = server.receive(myPortName);
+    usleep(100);
+    while(message != "over") {
         message = server.receive(myPortName);
         usleep(100);
         std::cout << message;
-        getline(std::cin, message);
+        if(message == "2"){
+            continue;
+        }else if (message == "over"){
+            break;
+        }
+        getline(std::cin, message); //FIXME time check
         server.send(serverPortName, message);
     }
     return 0;
