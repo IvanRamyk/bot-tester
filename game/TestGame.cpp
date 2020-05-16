@@ -5,7 +5,7 @@
 #include "TestGame.h"
 
 std::pair <bool, std::string> TestGame::makeMove(const std::string &playerMove) {
-    if(playerMove == "0"){
+    if(playerMove == "0" || playerMove == "over"){
         win = (moving ? 2 : 1);
         return {0, playerMove};
     }

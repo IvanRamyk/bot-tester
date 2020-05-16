@@ -6,7 +6,7 @@
 
 const bool FULL_LOG = true;
 
-const int CNT_GAMES = 50;
+const int CNT_GAMES = 3;
 
 const std::string clientPath = "client/cmake-build-debug/testClient";
 
@@ -16,38 +16,45 @@ int playGame(Interactor<T>* i, const std::string& gameName, int serverPort, int 
 }
 
 int playBattle(const std::string& firstPlayer, const std::string& secondPlayer){
-    int serverPort = 8235,
+    std::cout << "Battle against " << firstPlayer << " and " << secondPlayer << std::endl;
+    int serverPort = 5030,
             currentBotPort = serverPort+1,
-            nextBotPort = currentBotPort;//serverPort+2;
+            nextBotPort = serverPort+2;
 
-    std::string pipeline = "mkfifo pipeline145";
+    //std::string pipeline = "mkfifo pipeline && ";
 
-    std::string commandOne = pipeline + "1\n pwd \n./" + clientPath + " ";
-    commandOne += std::to_string(serverPort) + " " + std::to_string(currentBotPort) + " < pipeline1451 | ";
-    commandOne += firstPlayer + " > pipeline1451";
 
-   // std::string commandTwo = pipeline + "2\n ./" + clientPath + " ";
-   // commandTwo += std::to_string(serverPort) + " " + std::to_string(currentBotPort) + " < pipeline1452 | ";
-   // commandTwo += secondPlayer + " > pipeline1452";
+
+    std::string commandOne = "cat pipeline | ./" + clientPath + " ";
+    commandOne += std::to_string(serverPort) + " " + std::to_string(currentBotPort) + " | ";
+    commandOne += firstPlayer + " > pipeline";
+
+    std::string commandTwo = "cat pipeline2 | ./" + clientPath + " ";//= pipeline + "2\n .
+    commandTwo += std::to_string(serverPort) + " " + std::to_string(nextBotPort) + " | ";
+    commandTwo += secondPlayer + " > pipeline2";
 
     std::ofstream file1("script1.sh");
     file1 << commandOne << std::endl;
-   // std::ofstream file2("script2.sh");
-   // file2 << commandTwo << std::endl;
+    std::cout << commandOne << std::endl;
+    std::ofstream file2("script2.sh");
+    std::cout << commandTwo << std::endl;
+    file2 << commandTwo << std::endl;
     file1.close();
-   // file2.close();
-
+    file2.close();
+    usleep(2000000);
     auto* game = new TestGame();
     auto* interactor = new Interactor<TestGame>(game);
-
-    auto fut = std::async (std::launch::async, system, "./script2.sh");
-    auto handle = std::async(std::launch::async, playGame<TestGame>, interactor, firstPlayer + "_" + secondPlayer, serverPort, currentBotPort, nextBotPort);
-    int x = 7;
+    //auto fut = std::async (std::launch::async, system, "./script2.sh");
     //auto fut1 = std::async (std::launch::async, system, "./script1.sh");
-    usleep(2000);
-    // sleep(3);
-    int win = handle.get();//interactor->playGame(firstPlayer + "_" + secondPlayer, serverPort, currentBotPort, nextBotPort);
-    std::cout << "Battle was successful!" << std::endl;
+    std::thread th1(system, "./script1.sh");
+    std::thread th2(system, "./script2.sh");
+    usleep(2000000);
+    int win = interactor->playGame(firstPlayer + "_" + secondPlayer, serverPort, currentBotPort, nextBotPort);
+    std::cout << "Battle was successful! (" << win << ")\n"  << std::endl;
+    th1.detach();
+    th2.detach();
+    system("./clear.sh");
+
     return win;
 }
 
@@ -72,6 +79,7 @@ std::vector <std::pair <std::string, int>> tournament(const std::string& file_pa
             int firstWin = 0, secondWin = 0, tie = 0, winner = 0;
             for(int i = 0; i < CNT_GAMES; i++){
                 winner = playBattle(players[firstPlayer], players[secondPlayer]);
+                usleep(1000000);
                 switch(winner){
                     case 0:
                         tie++;
@@ -87,6 +95,7 @@ std::vector <std::pair <std::string, int>> tournament(const std::string& file_pa
                     default:
                         break;
                 }
+                usleep(1000000);
                 winner = playBattle(players[secondPlayer], players[firstPlayer]);
                 switch(winner){
                     case 0:
@@ -103,6 +112,14 @@ std::vector <std::pair <std::string, int>> tournament(const std::string& file_pa
                     default:
                         break;
                 }
+            }
+            if(firstWin > secondWin){
+                result[firstPlayer].second += 3;
+            }else if(firstWin < secondWin){
+                result[secondPlayer].second += 3;
+            }else{
+                result[firstPlayer].second++;
+                result[secondPlayer].second++;
             }
             if(FULL_LOG){
                 if(firstWin > secondWin){

@@ -28,7 +28,7 @@ template <class GameInstance>
 class Interactor {
     GameInstance* Game;
     Server server;
-    bool recordLog = false;
+    bool recordLog = true;
     bool writeLog = true;
 
 
@@ -53,19 +53,24 @@ template <class Game>
 int Interactor<Game>::playGame(const std::string& gameName, int serverPort, int currentPlayer, int nextPlayer) {
     std::ofstream ofs("gameLog_" + gameName);
     server.send(currentPlayer, "1");
-   // server.send(nextPlayer, "2");
-
+    server.send(nextPlayer, "2");
+    usleep(100000);
     while(true) {
         std::string playerMove = server.receive(serverPort);
+      //  ofs << "Server received : " << playerMove << std::endl;
+      //  std::cout << "Server received : " << playerMove << std::endl;
         auto result = Game->makeMove(playerMove);
-        usleep(100);
+        usleep(100000);
+        recordLog = true;
+        writeLog = true;
         if(recordLog)
             ofs << result.second << std::endl;
         else if(writeLog)
             std::cout << result.second << std::endl;
         if (!result.first) {
-            server.send(currentPlayer, "-1"); //FIXME: Game over SIGNAL, maybe should be who won
-           // server.send(nextPlayer, "-1"); //FIXME: -1 -> over
+            //server.send(currentPlayer, "over");
+            server.send(nextPlayer, "over");
+            ofs.close();
             return Game->winner();
         }
         server.send(nextPlayer, result.second);
