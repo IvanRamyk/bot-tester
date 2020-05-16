@@ -7,6 +7,7 @@
 
 #include <string>
 #include <fstream>
+#include "../game/TestGame.h"
 #include "../game/Quoridor.hpp"
 #include "../server/Server.hpp"
 
@@ -35,29 +36,28 @@ public:
     explicit Interactor<GameInstance>(GameInstance* gameInstance){
         Game = gameInstance;
     }
-    int playGame(const std::string& gameName);
+    int playGame(const std::string& gameName, int serverPort, int currentPlayer, int nextPlayer);
 };
 
 bool isDraw(const std::string& result){
     if(result.length() < 4)
         return false;
     std::string word = "";
-    for(int i = 0; i < 4; i++){
-        word = result[result.length
+    for(int i = 4; i > 0; i--){
+        word += result[result.length() - i];
     }
+    return word == "draw";
 }
 
 template <class Game>
-int Interactor<Game>::playGame(const std::string& gameName) {
+int Interactor<Game>::playGame(const std::string& gameName, int serverPort, int currentPlayer, int nextPlayer) {
     std::ofstream ofs("gameLog_" + gameName);
-    server.send(8002, "1");
-    server.send(8003, "2");
-    int currentPlayer = 8002;
-    int nextPlayer = 8003;
-    int serverPort = 8004;
+    server.send(currentPlayer, "1");
+   // server.send(nextPlayer, "2");
+
     while(true) {
         std::string playerMove = server.receive(serverPort);
-        auto result = Game->makeMove();
+        auto result = Game->makeMove(playerMove);
         usleep(100);
         if(recordLog)
             ofs << result.second << std::endl;
@@ -65,7 +65,7 @@ int Interactor<Game>::playGame(const std::string& gameName) {
             std::cout << result.second << std::endl;
         if (!result.first) {
             server.send(currentPlayer, "-1"); //FIXME: Game over SIGNAL, maybe should be who won
-            server.send(nextPlayer, "-1");
+           // server.send(nextPlayer, "-1"); //FIXME: -1 -> over
             return Game->winner();
         }
         server.send(nextPlayer, result.second);

@@ -1,11 +1,11 @@
+//#include <gtest/gtest.h>
 #include <iostream>
-#include "game/Quoridor.hpp"
-#include "Interactor/Interactor.h"
+#include "tournament/tournament.h"
 
 int main() {
-    auto* game = new Quoridor();
-    auto* interactor = new Interactor<Quoridor>(game);
-
-    std::cout << "I've done my branch!\n";
+    //testing::InitGoogleTest();
+    //RUN_ALL_TESTS();
+    std::cout << "Project complied!" << std::endl;
+    tournament("players/names.txt");
     return 0;
 }
