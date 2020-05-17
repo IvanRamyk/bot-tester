@@ -60,6 +60,7 @@ int Interactor<Game>::playGame(const std::string& gameName, int serverPort, int 
         ofs << "Server received : " << playerMove << std::endl;
         std::cout << "Server received : " << playerMove << std::endl;
         auto result = Game->makeMove(playerMove);
+        std::cout << (result.first ? " and the game is on" : "but i didn't like it " ) << result.second << std::endl;
         usleep(100000);
         recordLog = true;
         writeLog = true;
@@ -68,7 +69,8 @@ int Interactor<Game>::playGame(const std::string& gameName, int serverPort, int 
         else if(writeLog)
             std::cout << result.second << std::endl;
         if (!result.first) {
-            server.send(currentPlayer, "over");
+            //if(playerMove != "over" && playerMove != "TL")
+                server.send(currentPlayer, "over");
             server.send(nextPlayer, "over");
             ofs.close();
             return Game->winner();
