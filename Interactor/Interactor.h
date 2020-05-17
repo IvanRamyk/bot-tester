@@ -68,7 +68,7 @@ int Interactor<Game>::playGame(const std::string& gameName, int serverPort, int 
         else if(writeLog)
             std::cout << result.second << std::endl;
         if (!result.first) {
-            //server.send(currentPlayer, "over");
+            server.send(currentPlayer, "over");
             server.send(nextPlayer, "over");
             ofs.close();
             return Game->winner();

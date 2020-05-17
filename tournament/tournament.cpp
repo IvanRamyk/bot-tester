@@ -42,8 +42,8 @@ int playBattle(const std::string& firstPlayer, const std::string& secondPlayer){
     file1.close();
     file2.close();
     usleep(2000000);
-    auto* game = new TestGame();
-    auto* interactor = new Interactor<TestGame>(game);
+    auto* game = new Quoridor();
+    auto* interactor = new Interactor<Quoridor>(game);
     //auto fut = std::async (std::launch::async, system, "./script2.sh");
     //auto fut1 = std::async (std::launch::async, system, "./script1.sh");
     std::thread th1(system, "./script1.sh");
@@ -51,9 +51,9 @@ int playBattle(const std::string& firstPlayer, const std::string& secondPlayer){
     usleep(2000000);
     int win = interactor->playGame(firstPlayer + "_" + secondPlayer, serverPort, currentBotPort, nextBotPort);
     std::cout << "Battle was successful! (" << win << ")\n"  << std::endl;
+    system("./clear.sh");
     th1.detach();
     th2.detach();
-    system("./clear.sh");
 
     return win;
 }
