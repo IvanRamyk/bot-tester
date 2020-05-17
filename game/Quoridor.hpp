@@ -50,6 +50,7 @@ private:
     int used_partitions[4];
     int player_number;
     int cnt_moves;
+    int _winner = 0;
     map<Partition, int> partitions;// with length 1, direction only Right or Up (for more strict definition)
     static Partition _downToUp(Partition p);
 
