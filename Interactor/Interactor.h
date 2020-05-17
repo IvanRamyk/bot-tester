@@ -57,8 +57,8 @@ int Interactor<Game>::playGame(const std::string& gameName, int serverPort, int 
     usleep(100000);
     while(true) {
         std::string playerMove = server.receive(serverPort);
-      //  ofs << "Server received : " << playerMove << std::endl;
-      //  std::cout << "Server received : " << playerMove << std::endl;
+        ofs << "Server received : " << playerMove << std::endl;
+        std::cout << "Server received : " << playerMove << std::endl;
         auto result = Game->makeMove(playerMove);
         usleep(100000);
         recordLog = true;

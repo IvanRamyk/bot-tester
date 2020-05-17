@@ -2,6 +2,8 @@
 #include <iostream>
 #include <algorithm>
 #include "tournament/tournament.h"
+#include <thread>
+#include <future>
 
 bool comp(std::pair<std::string, int> a, std::pair<std::string, int> b){
     return a.second > b.second;

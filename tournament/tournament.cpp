@@ -17,7 +17,7 @@ int playGame(Interactor<T>* i, const std::string& gameName, int serverPort, int 
 
 int playBattle(const std::string& firstPlayer, const std::string& secondPlayer){
     std::cout << "Battle against " << firstPlayer << " and " << secondPlayer << std::endl;
-    int serverPort = 5030,
+    int serverPort = 5033,
             currentBotPort = serverPort+1,
             nextBotPort = serverPort+2;
 
