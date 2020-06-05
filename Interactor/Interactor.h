@@ -36,7 +36,7 @@ public:
     explicit Interactor<GameInstance>(GameInstance* gameInstance){
         Game = gameInstance;
     }
-    int playGame(const std::string& gameName, int serverPort, int currentPlayer, int nextPlayer);
+    int playGame(std::string gameName, int serverPort, int currentPlayer, int nextPlayer);
 };
 
 bool isDraw(const std::string& result){
@@ -50,17 +50,20 @@ bool isDraw(const std::string& result){
 }
 
 template <class Game>
-int Interactor<Game>::playGame(const std::string& gameName, int serverPort, int currentPlayer, int nextPlayer) {
+int Interactor<Game>::playGame(std::string gameName, int serverPort, int currentPlayer, int nextPlayer) {
     std::ofstream ofs("gameLog_" + gameName);
+    gameName = "gameLog_" + gameName + ".txt";
+    const char* chrName = gameName.c_str();
     server.send(currentPlayer, "1");
     server.send(nextPlayer, "2");
     usleep(100000);
+    //freopen("Full_game_log.txt", "w", stdout);
     while(true) {
         std::string playerMove = server.receive(serverPort);
-        ofs << "Server received : " << playerMove << std::endl;
-        std::cout << "Server received : " << playerMove << std::endl;
+        //ofs << "Server received : " << playerMove << std::endl;
+        std::cout << playerMove << std::endl;
         auto result = Game->makeMove(playerMove);
-        std::cout << (result.first ? " and the game is on" : "but i didn't like it " ) << result.second << std::endl;
+        //std::cout << (result.first ? " and the game is on" : "but i didn't like it " ) << result.second << std::endl;
         usleep(100000);
         recordLog = true;
         writeLog = true;
@@ -73,6 +76,7 @@ int Interactor<Game>::playGame(const std::string& gameName, int serverPort, int 
                 server.send(currentPlayer, "over");
             server.send(nextPlayer, "over");
             ofs.close();
+            //fclose(stdout);
             return Game->winner();
         }
         server.send(nextPlayer, result.second);

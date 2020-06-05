@@ -12,6 +12,7 @@ bool comp(std::pair<std::string, int> a, std::pair<std::string, int> b){
 int main() {
     //testing::InitGoogleTest();
     //RUN_ALL_TESTS();
+    freopen("Full_game_log.txt", "w", stdout);
     std::cout << "Project complied!" << std::endl;
     auto result = tournament("players/names.txt");
     std::cout << "\n\n\n------------------------------------------" << std::endl;
@@ -21,5 +22,6 @@ int main() {
     for(auto r : result){
         std::cout << r.first << " : " << r.second << std::endl;
     }
+    fclose(stdout);
     return 0;
 }

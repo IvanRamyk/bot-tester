@@ -6,7 +6,7 @@
 
 const bool FULL_LOG = true;
 
-const int CNT_GAMES = 3;
+const int CNT_GAMES = 5;
 
 const std::string clientPath = "client/cmake-build-debug/testClient";
 
@@ -17,7 +17,7 @@ int playGame(Interactor<T>* i, const std::string& gameName, int serverPort, int 
 
 int playBattle(const std::string& firstPlayer, const std::string& secondPlayer){
     std::cout << "Battle against " << firstPlayer << " and " << secondPlayer << std::endl;
-    int serverPort = 5033,
+    int serverPort = 5036,
             currentBotPort = serverPort+1,
             nextBotPort = serverPort+2;
 
@@ -49,7 +49,9 @@ int playBattle(const std::string& firstPlayer, const std::string& secondPlayer){
     std::thread th1(system, "./script1.sh");
     std::thread th2(system, "./script2.sh");
     usleep(2000000);
+    //freopen("game.txt", "w", stdout);
     int win = interactor->playGame(firstPlayer + "_" + secondPlayer, serverPort, currentBotPort, nextBotPort);
+    //fclose(stdout);
     std::cout << "Battle was successful! (" << win << ")\n"  << std::endl;
     system("./clear.sh");
     th1.detach();
