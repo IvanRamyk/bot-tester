@@ -1,0 +1,3 @@
+/home/sadoffnick/Documents/UNI/STUDY/University_Labs/semester_4/Project/players/team_2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/sadoffnick/Documents/UNI/STUDY/University_Labs/semester_4/Project/players/team_2/cmake-build-debug/CMakeFiles/team_2.dir
+/home/sadoffnick/Documents/UNI/STUDY/University_Labs/semester_4/Project/players/team_2/cmake-build-debug/CMakeFiles/edit_cache.dir
