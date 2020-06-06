@@ -1,0 +1,4 @@
+./players/team_1/team_1
+Боeing
+./players/team_4/team_4
+KNU_Tella

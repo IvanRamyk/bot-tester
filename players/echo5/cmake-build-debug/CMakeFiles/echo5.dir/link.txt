@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/echo5.dir/main.cpp.o  -o echo5 

@@ -7,6 +7,7 @@
 
 #include <string>
 #include <fstream>
+#include "../game/TestGame.h"
 #include "../game/Quoridor.hpp"
 #include "../server/Server.hpp"
 
@@ -27,7 +28,7 @@ template <class GameInstance>
 class Interactor {
     GameInstance* Game;
     Server server;
-    bool recordLog = false;
+    bool recordLog = true;
     bool writeLog = true;
 
 
@@ -35,37 +36,47 @@ public:
     explicit Interactor<GameInstance>(GameInstance* gameInstance){
         Game = gameInstance;
     }
-    int playGame(const std::string& gameName);
+    int playGame(std::string gameName, int serverPort, int currentPlayer, int nextPlayer);
 };
 
 bool isDraw(const std::string& result){
     if(result.length() < 4)
         return false;
     std::string word = "";
-    for(int i = 0; i < 4; i++){
-        word = result[result.length()];
+    for(int i = 4; i > 0; i--){
+        word += result[result.length() - i];
     }
+    return word == "draw";
 }
 
 template <class Game>
-int Interactor<Game>::playGame(const std::string& gameName) {
+int Interactor<Game>::playGame(std::string gameName, int serverPort, int currentPlayer, int nextPlayer) {
     std::ofstream ofs("gameLog_" + gameName);
-    server.send(8002, "1");
-    server.send(8003, "2");
-    int currentPlayer = 8002;
-    int nextPlayer = 8003;
-    int serverPort = 8004;
+    gameName = "gameLog_" + gameName + ".txt";
+    const char* chrName = gameName.c_str();
+    server.send(currentPlayer, "1");
+    server.send(nextPlayer, "2");
+    usleep(100000);
+    //freopen("Full_game_log.txt", "w", stdout);
     while(true) {
         std::string playerMove = server.receive(serverPort);
-        auto result = Game->makeMove();
-        usleep(100);
+        //ofs << "Server received : " << playerMove << std::endl;
+        std::cout << playerMove << std::endl;
+        auto result = Game->makeMove(playerMove);
+        //std::cout << (result.first ? " and the game is on" : "but i didn't like it " ) << result.second << std::endl;
+        usleep(100000);
+        recordLog = true;
+        writeLog = true;
         if(recordLog)
             ofs << result.second << std::endl;
         else if(writeLog)
             std::cout << result.second << std::endl;
         if (!result.first) {
-            server.send(currentPlayer, "-1"); //FIXME: Game over SIGNAL, maybe should be who won
-            server.send(nextPlayer, "-1");
+            //if(playerMove != "over" && playerMove != "TL")
+                server.send(currentPlayer, "over");
+            server.send(nextPlayer, "over");
+            ofs.close();
+            //fclose(stdout);
             return Game->winner();
         }
         server.send(nextPlayer, result.second);
