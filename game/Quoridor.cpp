@@ -216,7 +216,7 @@ bool Quoridor::move(Move move) {
         }
     }
     if (move.direction == Left && _moveLeft(x, y)) {
-        players[acting_player].position.y++;
+        players[acting_player].position.y--;
         move_committed = true;
     }
     if (move.direction == LeftLeft && _moveLeft(x, y)) {
@@ -348,13 +348,16 @@ int Quoridor::winner() {
         return 1;
     if (secondPlayerVictory())
         return 2;
+    if(_winner)
+        return _winner;
     return 0;
 }
 
 std::pair<bool, std::string> Quoridor::makeMove(const std::string &_move) {
-    std::string log = _move;
+    std::string log = _move;// + " standing on (" + std::to_string(players[acting_player].position.x) + ":" + std::to_string(players[acting_player].position.y) + ") \n";
     if (!_checkFormat(_move)) {
-        return  {false, "incorrect format of move"};
+        _winner = (acting_player ? 1 : 2);
+        return  {false, log + "incorrect format of move"};
     }
     std::stringstream stream(_move);
     std::string type;
@@ -364,13 +367,17 @@ std::pair<bool, std::string> Quoridor::makeMove(const std::string &_move) {
         stream >> x >> y;
         int cur_x = players[acting_player].position.x;
         int cur_y = players[acting_player].position.y;
+        //log = log + " standing on (" + std::to_string(players[acting_player].position.x) + ":" + std::to_string(players[acting_player].position.y) + ") ";
         int player = acting_player;
         Direction direction = _diffToDirection(x - cur_x, y - cur_y);
-        if (direction == None)
-            return {false, log + "\nplayer " + std::to_string(acting_player + 1) + " made an impossible move."};
+        if (direction == None){
+            _winner = (acting_player ? 1 : 2);
+            return {false, log + "\nplayer " + std::to_string(acting_player + 1) + " made an impossible direction move."};
+        }
         bool result =  move({player, direction});
         if (!result) {
-            return {false, log + "\nplayer " + std::to_string(acting_player + 1) + " made an impossible move."};
+            _winner = (acting_player ? 1 : 2);
+            return {false, log + "\nplayer " + std::to_string(acting_player + 1) + " made an impossible non-result move."};
         }
         if (firstPlayerVictory()) {
             return {false, log + "\nplayer " + std::to_string(1) + " won."};
@@ -397,15 +404,18 @@ std::pair<bool, std::string> Quoridor::makeMove(const std::string &_move) {
         int dx = x2 - x1;
         int dy = y2 - y1;
         Partition partition{};
-        partition.start_point = {x1, x2};
+        partition.start_point = {x1, y1};
         if (dy == 0 && dx == 2)
             partition.direction = Up;
         else if (dy == 2 && dx == 0)
             partition.direction = Right;
-        else
+        else{
+            _winner = (acting_player ? 1 : 2);
             return {false, log + "\nplayer " + std::to_string(acting_player + 1) + " made an impossible move."};
+        }
         bool res = setPartition(partition);
         if (!res) {
+            _winner = (acting_player ? 1 : 2);
             return {false, log + "\nplayer " + std::to_string(acting_player + 1) + " made an impossible move."};
         }
         return {true, log};

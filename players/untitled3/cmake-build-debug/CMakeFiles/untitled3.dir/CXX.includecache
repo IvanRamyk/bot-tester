@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/sadoffnick/Documents/UNI/STUDY/University_Labs/semester_4/Project/players/untitled3/main.cpp
+iostream
+-
+thread
+-
+chrono
+-
+mutex
+-
+condition_variable
+-
+

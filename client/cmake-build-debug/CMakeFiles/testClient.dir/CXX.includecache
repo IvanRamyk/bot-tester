@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/sadoffnick/Documents/UNI/STUDY/University_Labs/semester_4/Project/client/main.cpp
+iostream
+-
+fstream
+-
+../server/Server.hpp
+/home/sadoffnick/Documents/UNI/STUDY/University_Labs/semester_4/Project/server/Server.hpp
+
+/home/sadoffnick/Documents/UNI/STUDY/University_Labs/semester_4/Project/server/Server.hpp
+ctime
+-
+string
+-
+iostream
+-
+boost/bind.hpp
+-
+boost/asio.hpp
+-
+boost/thread.hpp
+-
+boost/format.hpp
+-
+

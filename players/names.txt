@@ -1,0 +1,12 @@
+./players/team_1/team_1
+Боeing
+python3 players/team_3/main.py
+DementiaAndCourage
+./players/team_4/team_4
+KNU_Tella
+./players/team_2/team_2
+Жеребці
+./players/team_6/team_6
+Ми не вміємо писати ботів
+./players/team_7/cyber-contest/team_7
+Термоядерний реактор холодного синтезу
